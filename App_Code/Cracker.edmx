@@ -1,0 +1,282 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="2.0" xmlns:edmx="http://schemas.microsoft.com/ado/2008/10/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="CrackerModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/02/edm/ssdl">
+        <EntityContainer Name="CrackerModelStoreContainer">
+          <EntitySet Name="Bugs" EntityType="CrackerModel.Store.Bugs" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Languages" EntityType="CrackerModel.Store.Languages" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Statuses" EntityType="CrackerModel.Store.Statuses" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Transactions" EntityType="CrackerModel.Store.Transactions" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_Transactions_Bugs" Association="CrackerModel.Store.FK_Transactions_Bugs">
+            <End Role="Bugs" EntitySet="Bugs" />
+            <End Role="Transactions" EntitySet="Transactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transactions_Languages" Association="CrackerModel.Store.FK_Transactions_Languages">
+            <End Role="Languages" EntitySet="Languages" />
+            <End Role="Transactions" EntitySet="Transactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transactions_Statuses" Association="CrackerModel.Store.FK_Transactions_Statuses">
+            <End Role="Statuses" EntitySet="Statuses" />
+            <End Role="Transactions" EntitySet="Transactions" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Bugs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Bug" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Languages">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="LanguageLong" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="LanguageShort" Type="nvarchar" Nullable="false" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Statuses">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="StatusName" Type="nvarchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Transactions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="BugId" Type="int" Nullable="false" />
+          <Property Name="StatusId" Type="int" Nullable="false" />
+          <Property Name="ChangedBy" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="ChangedOn" Type="datetime" Nullable="false" />
+          <Property Name="LanguageId" Type="int" />
+          <Property Name="Note" Type="nvarchar" MaxLength="1000" />
+          <Property Name="TimeSpent" Type="int" />
+        </EntityType>
+        <Association Name="FK_Transactions_Bugs">
+          <End Role="Bugs" Type="CrackerModel.Store.Bugs" Multiplicity="1" />
+          <End Role="Transactions" Type="CrackerModel.Store.Transactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bugs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Transactions">
+              <PropertyRef Name="BugId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transactions_Languages">
+          <End Role="Languages" Type="CrackerModel.Store.Languages" Multiplicity="0..1" />
+          <End Role="Transactions" Type="CrackerModel.Store.Transactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Languages">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Transactions">
+              <PropertyRef Name="LanguageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transactions_Statuses">
+          <End Role="Statuses" Type="CrackerModel.Store.Statuses" Multiplicity="1" />
+          <End Role="Transactions" Type="CrackerModel.Store.Transactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Statuses">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Transactions">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CrackerModel" Alias="Self" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2008/09/edm">
+        <EntityContainer Name="CrackerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Languages" EntityType="CrackerModel.Language" />
+          <EntitySet Name="Statuses" EntityType="CrackerModel.Status" />
+          <EntitySet Name="Bugs" EntityType="CrackerModel.Bug" />
+          <EntitySet Name="Transactions" EntityType="CrackerModel.Transaction" />
+          <AssociationSet Name="FK_Transactions_Bugs" Association="CrackerModel.FK_Transactions_Bugs">
+            <End Role="Bug" EntitySet="Bugs" />
+            <End Role="Transaction" EntitySet="Transactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transactions_Languages" Association="CrackerModel.FK_Transactions_Languages">
+            <End Role="Language" EntitySet="Languages" />
+            <End Role="Transaction" EntitySet="Transactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Transactions_Statuses" Association="CrackerModel.FK_Transactions_Statuses">
+            <End Role="Status" EntitySet="Statuses" />
+            <End Role="Transaction" EntitySet="Transactions" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Language">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LanguageLong" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Name="LanguageShort" Type="String" Nullable="false" MaxLength="10" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Transactions" Relationship="CrackerModel.FK_Transactions_Languages" FromRole="Language" ToRole="Transaction" />
+        </EntityType>
+        <EntityType Name="Status">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StatusName" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Transactions" Relationship="CrackerModel.FK_Transactions_Statuses" FromRole="Status" ToRole="Transaction" />
+        </EntityType>
+        <EntityType Name="Bug">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Bug1" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Transactions" Relationship="CrackerModel.FK_Transactions_Bugs" FromRole="Bug" ToRole="Transaction" />
+        </EntityType>
+        <EntityType Name="Transaction">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="BugId" Nullable="false" />
+          <Property Type="Int32" Name="StatusId" Nullable="false" />
+          <Property Type="String" Name="ChangedBy" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="ChangedOn" Nullable="false" />
+          <Property Type="Int32" Name="LanguageId" Nullable="false" />
+          <NavigationProperty Name="Bug" Relationship="CrackerModel.FK_Transactions_Bugs" FromRole="Transaction" ToRole="Bug" />
+          <NavigationProperty Name="Language" Relationship="CrackerModel.FK_Transactions_Languages" FromRole="Transaction" ToRole="Language" />
+          <NavigationProperty Name="Status" Relationship="CrackerModel.FK_Transactions_Statuses" FromRole="Transaction" ToRole="Status" />
+          <Property Type="String" Name="Note" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="TimeSpent" />
+        </EntityType>
+        <Association Name="FK_Transactions_Bugs">
+          <End Type="CrackerModel.Bug" Role="Bug" Multiplicity="1" />
+          <End Type="CrackerModel.Transaction" Role="Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Bug">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="BugId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transactions_Languages">
+          <End Type="CrackerModel.Language" Role="Language" Multiplicity="1" />
+          <End Type="CrackerModel.Transaction" Role="Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Language">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="LanguageId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Transactions_Statuses">
+          <End Type="CrackerModel.Status" Role="Status" Multiplicity="1" />
+          <End Type="CrackerModel.Transaction" Role="Transaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Status">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Transaction">
+              <PropertyRef Name="StatusId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2008/09/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CrackerModelStoreContainer" CdmEntityContainer="CrackerEntities">
+          <EntitySetMapping Name="Languages">
+            <EntityTypeMapping TypeName="CrackerModel.Language">
+              <MappingFragment StoreEntitySet="Languages">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="LanguageLong" ColumnName="LanguageLong" />
+                <ScalarProperty Name="LanguageShort" ColumnName="LanguageShort" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Statuses">
+            <EntityTypeMapping TypeName="CrackerModel.Status">
+              <MappingFragment StoreEntitySet="Statuses">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Bugs">
+            <EntityTypeMapping TypeName="CrackerModel.Bug">
+              <MappingFragment StoreEntitySet="Bugs">
+                <ScalarProperty Name="Bug1" ColumnName="Bug" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transactions">
+            <EntityTypeMapping TypeName="CrackerModel.Transaction">
+              <MappingFragment StoreEntitySet="Transactions">
+                <ScalarProperty Name="TimeSpent" ColumnName="TimeSpent" />
+                <ScalarProperty Name="Note" ColumnName="Note" />
+                <ScalarProperty Name="LanguageId" ColumnName="LanguageId" />
+                <ScalarProperty Name="ChangedOn" ColumnName="ChangedOn" />
+                <ScalarProperty Name="ChangedBy" ColumnName="ChangedBy" />
+                <ScalarProperty Name="StatusId" ColumnName="StatusId" />
+                <ScalarProperty Name="BugId" ColumnName="BugId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2008/10/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams>
+      <Diagram Name="Cracker">
+        <EntityTypeShape EntityType="CrackerModel.Language" Width="1.5" PointX="0.75" PointY="0.75" Height="1.59568359375" IsExpanded="true" />
+        <EntityTypeShape EntityType="CrackerModel.Status" Width="1.5" PointX="2.75" PointY="0.75" Height="1.4033821614583335" IsExpanded="true" />
+        <EntityTypeShape EntityType="CrackerModel.Bug" Width="1.5" PointX="2.75" PointY="4.375" Height="1.5956835937499996" IsExpanded="true" />
+        <EntityTypeShape EntityType="CrackerModel.Transaction" Width="1.5" PointX="5" PointY="0.75" Height="2.7494921874999996" />
+        <AssociationConnector Association="CrackerModel.FK_Transactions_Bugs" >
+          <ConnectorPoint PointX="4.25" PointY="5.172841796875" />
+          <ConnectorPoint PointX="5.75" PointY="5.172841796875" />
+          <ConnectorPoint PointX="5.75" PointY="3.4994921874999996" />
+        </AssociationConnector>
+        <AssociationConnector Association="CrackerModel.FK_Transactions_Languages" >
+          <ConnectorPoint PointX="2.25" PointY="2.4730843098958335" />
+          <ConnectorPoint PointX="5" PointY="2.4730843098958335" />
+        </AssociationConnector>
+        <AssociationConnector Association="CrackerModel.FK_Transactions_Statuses" >
+          <ConnectorPoint PointX="4.25" PointY="1.5478417968750002" />
+          <ConnectorPoint PointX="5" PointY="1.5478417968750002" />
+        </AssociationConnector>
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</edmx:Edmx>
