@@ -8,7 +8,7 @@
         This site serves for tracking purposes during bugfixing. 
     </p>
     <p>
-        Each bugfixer should check out the bug he's currently working on (i.e. check out ACA-123), so there's no duplicated work. 
+        Each bugfixer should check out the bug he's currently working on (i.e. check out ABC-123), so there's no duplicated work. 
         After he's finished fixing the bug, he checks the bug in and moves on to a new one.
     </p>
     <p>

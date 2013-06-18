@@ -16,7 +16,7 @@
         </AnonymousTemplate>
         <LoggedInTemplate>
             <asp:Label ID="Label1" runat="server" Text="Bug ID: "></asp:Label>
-            <asp:TextBox ID="txtBugId" runat="server" MaxLength="10" ToolTip="Insert bug name in project-number format (i.e. ACA-123)"></asp:TextBox>
+            <asp:TextBox ID="txtBugId" runat="server" MaxLength="10" ToolTip="Insert bug name in project-number format (i.e. ABC-123)"></asp:TextBox>
             <asp:Button ID="btnCheckOut" runat="server" Text="Check Out" OnClick="btnCheckOut_Click" />
             <asp:Label ID="lblAlreadyCheckedOut" runat="server" ForeColor="#FF3300" Text="Already Checked Out!"
                 Visible="False"></asp:Label>
