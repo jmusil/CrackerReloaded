@@ -35,6 +35,10 @@
                     </td>
                     <td>
                         <asp:TextBox ID="txtTime" runat="server"></asp:TextBox>
+                        <asp:RequiredFieldValidator ID="RequiredFieldValidator1" runat="server" 
+                    ControlToValidate="txtTime" Display="Dynamic" ErrorMessage="Value missing" 
+                    ForeColor="#FF3300"></asp:RequiredFieldValidator>
+                <asp:RangeValidator ID="RangeValidator1" runat="server" ControlToValidate="txtTime" Display="Dynamic" ErrorMessage="Invalid value" ForeColor="#FF3300" MaximumValue="525600" MinimumValue="0" SetFocusOnError="True" Type="Integer"></asp:RangeValidator>
                     </td>
                 </tr>
                 <tr>
