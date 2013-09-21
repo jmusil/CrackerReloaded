@@ -31,7 +31,7 @@ public partial class _Default : System.Web.UI.Page
         {
             using (CrackerEntities myEntities = new CrackerEntities())
             {
-                ITransactionRepository transactionRepo = new TransactionRepository(myEntities);
+                ITransactionRepository transactionRepo = new TransactionRepository();
 
                 var result = (from bugs in myEntities.Bugs
                               where bugs.Bug1 == bug
@@ -118,9 +118,7 @@ public partial class _Default : System.Web.UI.Page
     /// <param name="myBugs">True for bugs for current user only, false for all bugs except those checked by current user</param>
     protected void setGridView(string gridID, bool myBugs)
     {
-        using (CrackerEntities myEntities = new CrackerEntities())
-        {
-            ITransactionRepository transactionRepo = new TransactionRepository(myEntities);
+            ITransactionRepository transactionRepo = new TransactionRepository();
 
             var checkedOutTransactions = transactionRepo.GetTransactionsByStatus(8);
 
@@ -135,6 +133,5 @@ public partial class _Default : System.Web.UI.Page
             }
             ((GridView)LoginView1.FindControl(gridID)).DataSource = transactions;
             ((GridView)LoginView1.FindControl(gridID)).DataBind();
-        }
     }
 }

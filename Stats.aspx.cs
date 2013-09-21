@@ -19,7 +19,7 @@ public partial class Stats : System.Web.UI.Page
             string selectedUser = ((DropDownList)LoginView1.FindControl("ddlUsers")).SelectedItem.Text;
             using (CrackerEntities myEntity = new CrackerEntities())
             {
-                ITransactionRepository transactionRepo = new TransactionRepository(myEntity);
+                ITransactionRepository transactionRepo = new TransactionRepository();
 
                 if (((CheckBox)LoginView1.FindControl("on")).Checked)
                 {

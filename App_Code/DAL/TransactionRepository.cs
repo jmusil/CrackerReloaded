@@ -11,9 +11,9 @@ public class TransactionRepository : ITransactionRepository, IDisposable
 {
     private CrackerEntities _context;
 
-    public TransactionRepository(CrackerEntities crackerEntities)
+    public TransactionRepository()
     {
-        this._context = crackerEntities;
+        this._context = new CrackerEntities();
     }
 
     public IEnumerable<Transaction> GetAllTransactions()

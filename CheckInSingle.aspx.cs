@@ -21,7 +21,7 @@ public partial class CheckInSingle : System.Web.UI.Page
 
         using (CrackerEntities myEntity = new CrackerEntities())
         {
-            ITransactionRepository transactionRepo = new TransactionRepository(myEntity);
+            ITransactionRepository transactionRepo = new TransactionRepository();
 
             //Verify that the bug we are going to check in can be checked in
             //Get bug ID
@@ -67,7 +67,7 @@ public partial class CheckInSingle : System.Web.UI.Page
     {
         using (CrackerEntities myEntity = new CrackerEntities())
         {
-            ITransactionRepository transactionRepo = new TransactionRepository(myEntity);
+            ITransactionRepository transactionRepo = new TransactionRepository();
             
             string bugName = Request.QueryString.Get("BugID");
 
