@@ -17,10 +17,12 @@ public partial class CheckInSingle : System.Web.UI.Page
 
         string checkedOutBy;
         DateTime changedOn;
-        string status;
+        
 
         using (CrackerEntities myEntity = new CrackerEntities())
         {
+            ITransactionRepository transactionRepo = new TransactionRepository(myEntity);
+
             //Verify that the bug we are going to check in can be checked in
             //Get bug ID
             var result = (from bug in myEntity.Bugs
@@ -29,13 +31,8 @@ public partial class CheckInSingle : System.Web.UI.Page
 
             if (result != null)
             {
-                //check if the bug is checked out & if it's checked by current user
-                var check = (from transaction in myEntity.Transactions
-                             where transaction.BugId == result.Id
-                             orderby transaction.ChangedOn descending
-                             select new { transaction.ChangedBy, transaction.Status.StatusName, transaction.ChangedOn }).First();
+                var check = transactionRepo.GetLastTransactionForBug(result.Id);
 
-                status = Convert.ToString(check.StatusName);
                 changedOn = Convert.ToDateTime(check.ChangedOn);
                 checkedOutBy = Convert.ToString(check.ChangedBy);
 
@@ -65,25 +62,33 @@ public partial class CheckInSingle : System.Web.UI.Page
     {
         Response.Redirect("~/Default.aspx");
     }
+
     protected void btnCheckIn_Click(object sender, EventArgs e)
     {
         using (CrackerEntities myEntity = new CrackerEntities())
         {
-            string bugName = Request.QueryString.Get("BugID");
+            ITransactionRepository transactionRepo = new TransactionRepository(myEntity);
             
-            Transaction myTransaction = new Transaction();
-            myTransaction.BugId = (from bug in myEntity.Bugs
-                                   where bug.Bug1 == bugName
-                                   select bug).SingleOrDefault().Id;
-            myTransaction.ChangedBy = HttpContext.Current.User.Identity.Name;
-            myTransaction.ChangedOn = DateTime.Now;
-            myTransaction.StatusId = Int32.Parse(((DropDownList)LoginView1.FindControl("ddlResolution")).SelectedValue);
-            myTransaction.TimeSpent = Int32.Parse(((TextBox)LoginView1.FindControl("txtTime")).Text);
-            myTransaction.LanguageId = Int32.Parse(((DropDownList)LoginView1.FindControl("ddlLanguages")).SelectedValue);
-            myTransaction.Note = HttpUtility.HtmlEncode(((TextBox)LoginView1.FindControl("txtNote")).Text);
+            string bugName = Request.QueryString.Get("BugID");
 
-            myEntity.Transactions.AddObject(myTransaction);
-            myEntity.SaveChanges();
+            int bugId = (from bug in myEntity.Bugs
+                         where bug.Bug1 == bugName
+                         select bug).SingleOrDefault().Id;
+
+            Transaction myTransaction = new Transaction
+            {
+                BugId = bugId,
+                ChangedBy = HttpContext.Current.User.Identity.Name,
+                ChangedOn = DateTime.Now,
+                StatusId = Int32.Parse(((DropDownList)LoginView1.FindControl("ddlResolution")).SelectedValue),
+                TimeSpent = Int32.Parse(((TextBox)LoginView1.FindControl("txtTime")).Text),
+                LanguageId = Int32.Parse(((DropDownList)LoginView1.FindControl("ddlLanguages")).SelectedValue),
+                Note = HttpUtility.HtmlEncode(((TextBox)LoginView1.FindControl("txtNote")).Text)
+            };
+
+            transactionRepo.InsertTransaction(myTransaction);
+            transactionRepo.Save();
+           
         }
         Response.Redirect("~/Default.aspx");
     }
