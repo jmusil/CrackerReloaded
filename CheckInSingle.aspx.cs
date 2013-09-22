@@ -68,16 +68,15 @@ public partial class CheckInSingle : System.Web.UI.Page
         using (CrackerEntities myEntity = new CrackerEntities())
         {
             ITransactionRepository transactionRepo = new TransactionRepository();
-            
+            IBugRepository bugRepo = new BugRepository();
+
             string bugName = Request.QueryString.Get("BugID");
 
-            int bugId = (from bug in myEntity.Bugs
-                         where bug.Bug1 == bugName
-                         select bug).SingleOrDefault().Id;
+            var bugId = bugRepo.GetBugIdByTitle(bugName);
 
             Transaction myTransaction = new Transaction
             {
-                BugId = bugId,
+                BugId = (int)bugId,
                 ChangedBy = HttpContext.Current.User.Identity.Name,
                 ChangedOn = DateTime.Now,
                 StatusId = Int32.Parse(((DropDownList)LoginView1.FindControl("ddlResolution")).SelectedValue),

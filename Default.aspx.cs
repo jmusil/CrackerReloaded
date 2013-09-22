@@ -29,26 +29,24 @@ public partial class _Default : System.Web.UI.Page
 
         try
         {
-            using (CrackerEntities myEntities = new CrackerEntities())
-            {
                 ITransactionRepository transactionRepo = new TransactionRepository();
+                IBugRepository bugRepo = new BugRepository();
 
-                var result = (from bugs in myEntities.Bugs
-                              where bugs.Bug1 == bug
-                              select bugs).Count();
+                var result = bugRepo.GetBugIdByTitle(bug);
 
                 if (result == 0)
                 {
-                    Bug newBug = new Bug();
-                    newBug.Bug1 = bug;
-                    myEntities.Bugs.AddObject(newBug);
-                    myEntities.SaveChanges();
+                    Bug newBug = new Bug()
+                    {
+                        Bug1 = bug
+                        
+                    };
 
+                    bugRepo.InsertBug(newBug);
+                    bugRepo.Save();
                 }
 
-                bugId = (from bugs in myEntities.Bugs
-                         where bugs.Bug1 == bug
-                         select bugs.Id).Single();
+                bugId = (int)bugRepo.GetBugIdByTitle(bug);
 
                 //check if bug was not checked out previously (check if there is any transaction for this bug)
                 var testCheckout = transactionRepo.GetLastTransactionForBug(bugId);
@@ -59,7 +57,7 @@ public partial class _Default : System.Web.UI.Page
                     //check if bug is not checked out now
                     if (testCheckout.StatusId != 8)
                     {
-                        //checkout bug
+                        //check out bug
                         CheckoutBug(bugId, transactionRepo);
 
                         ((Label)LoginView1.FindControl("lblAlreadyCheckedOut")).Visible = false;
@@ -81,12 +79,11 @@ public partial class _Default : System.Web.UI.Page
                     setGridView(gridIdBugsMe, true);
                     setGridView(gridIdBugsOthers, false);
                 }
-            }
         }
         catch (DataException ex)
         {
             ((Label)LoginView1.FindControl("lblException")).Visible = true;
-            ((Label)LoginView1.FindControl("lblException")).Text = "Data not available, please try again later (" + ex.Message + ").";
+            ((Label)LoginView1.FindControl("lblException")).Text = "Data not available, please try again later (" + ex.Message + ex.InnerException.Message + ").";
         }
     }
 

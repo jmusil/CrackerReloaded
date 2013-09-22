@@ -17,36 +17,34 @@ public partial class Stats : System.Web.UI.Page
         if (User.Identity.IsAuthenticated && Page.IsValid)
         {
             string selectedUser = ((DropDownList)LoginView1.FindControl("ddlUsers")).SelectedItem.Text;
-            using (CrackerEntities myEntity = new CrackerEntities())
+
+            ITransactionRepository transactionRepo = new TransactionRepository();
+
+            if (((CheckBox)LoginView1.FindControl("on")).Checked)
             {
-                ITransactionRepository transactionRepo = new TransactionRepository();
 
-                if (((CheckBox)LoginView1.FindControl("on")).Checked)
-                {
+                string wtf = ((TextBox)LoginView1.FindControl("onDate")).Text;
+                DateTime myDate = DateTime.Parse(((TextBox)LoginView1.FindControl("onDate")).Text);
+                DateTime myDateNext = myDate.AddDays(1);
 
-                    string wtf = ((TextBox)LoginView1.FindControl("onDate")).Text;
-                    DateTime myDate = DateTime.Parse(((TextBox)LoginView1.FindControl("onDate")).Text);
-                    DateTime myDateNext = myDate.AddDays(1);
+                var result = transactionRepo.GetTransactionsByUserAndDate(selectedUser, myDate, myDateNext);
 
-                    var result = transactionRepo.GetTransactionsByUserAndDate(selectedUser, myDate, myDateNext);
+                ((GridView)LoginView1.FindControl("gvStats")).DataSource = result;
+                ((GridView)LoginView1.FindControl("gvStats")).DataBind();
+                ((Label)LoginView1.FindControl("lblTest")).Text = "<strong>Total: </strong>" + result.Count();
 
-                    ((GridView)LoginView1.FindControl("gvStats")).DataSource = result;
-                    ((GridView)LoginView1.FindControl("gvStats")).DataBind();
-                    ((Label)LoginView1.FindControl("lblTest")).Text = "<strong>Total: </strong>" + result.Count();
+            }
+            else
+            {
+                DateTime myStartDate = DateTime.Parse(((TextBox)LoginView1.FindControl("betweenStartDate")).Text);
+                DateTime myEndDate = DateTime.Parse(((TextBox)LoginView1.FindControl("betweenEndDate")).Text).AddHours(23).AddMinutes(59).AddSeconds(59);
 
-                }
-                else
-                {
-                    DateTime myStartDate = DateTime.Parse(((TextBox)LoginView1.FindControl("betweenStartDate")).Text);
-                    DateTime myEndDate = DateTime.Parse(((TextBox)LoginView1.FindControl("betweenEndDate")).Text).AddHours(23).AddMinutes(59).AddSeconds(59);
+                var result = transactionRepo.GetTransactionsByUserAndDate(selectedUser, myStartDate, myEndDate);
 
-                    var result = transactionRepo.GetTransactionsByUserAndDate(selectedUser, myStartDate, myEndDate);
+                ((GridView)LoginView1.FindControl("gvStats")).DataSource = result;
+                ((GridView)LoginView1.FindControl("gvStats")).DataBind();
+                ((Label)LoginView1.FindControl("lblTest")).Text = "<strong>Total: </strong>" + result.Count();
 
-                    ((GridView)LoginView1.FindControl("gvStats")).DataSource = result;
-                    ((GridView)LoginView1.FindControl("gvStats")).DataBind();
-                    ((Label)LoginView1.FindControl("lblTest")).Text = "<strong>Total: </strong>" + result.Count();
-
-                }
             }
         }
     }
